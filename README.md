@@ -39,10 +39,12 @@ src/core/index.js
 
 src/core/global-api/index.js
 
+```
 initUse(Vue)
 initMixin(Vue)
 initExtend(Vue)
 initAssetRegisters(Vue)
+```
 
 src/core/instance/index.js
 构造函数的定义点
@@ -59,6 +61,7 @@ renderMixin(Vue) // 渲染api _render,$nextTick
 ```
 
 src/core/instance/init.js
+
 ```
 vm._self = vm
 initLifecycle(vm) // $parent,$root,$children,$refs 初始化
@@ -70,8 +73,31 @@ initState(vm) // 初始化props，methods，data，computed，watch
 initProvide(vm) // resolve provide after data/props // 提供数据注入
 callHook(vm, 'created')
 ```
+05-数据响应式
+
+src/core/instance/state.js
+数据初始化
+
+initData()
+调用observe()
+
+observe()
+返回一个Observe对象实例
+
+src/core/observer/index.js
+判断数据对象类型，做响应化处理
+
+defineReactive
+给data中每一个key定义数据劫持
+
+src/core/observer/dep.js
+维护若干watcher
+
+src/core/observer/watcher.js
 
 
+src/core/observer/array.js
+数组响应化处理
 
 
 
