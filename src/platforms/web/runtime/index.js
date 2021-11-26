@@ -1,6 +1,8 @@
 /* @flow */
+// 配置了__patch__
+// 定义了原始的$mount 方法
 
-import Vue from 'core/index'
+import Vue from 'core/index' // vue构造函数
 import config from 'core/config'
 import { extend, noop } from 'shared/util'
 import { mountComponent } from 'core/instance/lifecycle'
@@ -27,20 +29,23 @@ Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
 // install platform runtime directives & components
+// 挂载指令 组件 过滤器
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
 //实现了patch方法（ 打补丁方法 ）
+// 虚拟DOM 更新真正的DOM的核心算法
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
 //定义了$mount方法 （挂载）
+// 调用 挂载 
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  el = el && inBrowser ? query(el) : undefined
+  el = el && inBrowser ? query(el) : undefined 
   return mountComponent(this, el, hydrating)
 }
 

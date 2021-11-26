@@ -1,13 +1,14 @@
 /* @flow */
 
+// 工具方法
 export const emptyObject = Object.freeze({})
 
 // These helpers produce better VM code in JS engines due to their
 // explicitness and function inlining.
+// 判断
 export function isUndef (v: any): boolean %checks {
   return v === undefined || v === null
 }
-
 export function isDef (v: any): boolean %checks {
   return v !== undefined && v !== null
 }
@@ -15,14 +16,15 @@ export function isDef (v: any): boolean %checks {
 export function isTrue (v: any): boolean %checks {
   return v === true
 }
-
 export function isFalse (v: any): boolean %checks {
   return v === false
 }
 
+
 /**
  * Check if value is primitive.
  */
+// 是否为基本类型
 export function isPrimitive (value: any): boolean %checks {
   return (
     typeof value === 'string' ||
@@ -38,6 +40,7 @@ export function isPrimitive (value: any): boolean %checks {
  * Objects from primitive values when we know the value
  * is a JSON-compliant type.
  */
+// 是否为对象类型
 export function isObject (obj: mixed): boolean %checks {
   return obj !== null && typeof obj === 'object'
 }
@@ -82,6 +85,7 @@ export function isPromise (val: any): boolean {
 /**
  * Convert a value to a string that is actually rendered.
  */
+// 数据转字符串类型
 export function toString (val: any): string {
   return val == null
     ? ''
@@ -94,6 +98,7 @@ export function toString (val: any): string {
  * Convert an input value to a number for persistence.
  * If the conversion fails, return original string.
  */
+//
 export function toNumber (val: string): number | string {
   const n = parseFloat(val)
   return isNaN(n) ? val : n
@@ -103,6 +108,8 @@ export function toNumber (val: string): number | string {
  * Make a map and return a function for checking if a key
  * is in that map.
  */
+//生成一个带有缓存的函数 用于判断 数据是否是混存中的数据
+// 代表 判断字符串（便签名）是否为内置的HTML标签
 export function makeMap (
   str: string,
   expectsLowerCase?: boolean
@@ -130,6 +137,7 @@ export const isReservedAttribute = makeMap('key,ref,slot,slot-scope,is')
 /**
  * Remove an item from an array.
  */
+// 数组里删除个元素
 export function remove (arr: Array<any>, item: any): Array<any> | void {
   if (arr.length) {
     const index = arr.indexOf(item)
@@ -150,13 +158,32 @@ export function hasOwn (obj: Object | Array<*>, key: string): boolean {
 /**
  * Create a cached version of a pure function.
  */
+// 生成带有混存的函数（闭包的引用）
 export function cached<F: Function> (fn: F): F {
   const cache = Object.create(null)
   return (function cachedFn (str: string) {
-    const hit = cache[str]
+    const hit = cache[str] // 如果已缓存，hit就是有数据的，如果为缓存hit 就是undefined
     return hit || (cache[str] = fn(str))
   }: any)
 }
+
+/**
+ *  const hit = cache[str] // 如果已缓存，hit就是有数据的，如果为缓存hit 就是undefined
+ *  return hit || (cache[str] = fn(str))
+ * 
+ *  let hit= cache[str]
+ *  if(hit===undefined){
+ *      let res=fn(str)
+ *       cache[str]=res
+ *        return res
+ *   }
+ * else {
+ *  return hit 
+ * 
+ * }
+ * 
+ * 
+ * /
 
 /**
  * Camelize a hyphen-delimited string.
@@ -176,10 +203,26 @@ export const capitalize = cached((str: string): string => {
 /**
  * Hyphenate a camelCase string.
  */
+//
 const hyphenateRE = /\B([A-Z])/g
 export const hyphenate = cached((str: string): string => {
   return str.replace(hyphenateRE, '-$1').toLowerCase()
 })
+
+
+
+
+// vue 运行在浏览器中，需要考虑性能
+// 每次数据的更新 -> 虚拟DOM的生成 （模版解析的行为）-> 因此将经常使用的字符串与算法进行缓存
+// 在垃圾回收的原则中有一个统计现象："使用的越多的数据，一般都会频繁的使用"
+// 1. 每次创建一个数据，我们就会考虑是否将其回收
+// 2. 在数据达到一定限额的时候，就会考虑将数据回收（回收不是实时）
+//  - 如果每次都有判断对象是否需要回收，那么就需要遍历
+//  - 将对象进行划分，统计，往往一个数据使用完以后就不需要再使用了
+//  - 一个对象如果有一次回收之后还保留下来，统计的结果是这个对象会比较持久在内存中驻留。
+// 在模版中常常会使用“指令”，在vue中一个 xxx-xxx-xxx 的形式出现的属性
+// 每次数据的更新都可能会带来 指令 的解析，所以解析就是字符串处理，一般会消耗性能。
+//
 
 /**
  * Simple bind polyfill for environments that do not support it,
@@ -218,7 +261,9 @@ export const bind = Function.prototype.bind
 export function toArray (list: any, start?: number): Array<any> {
   start = start || 0
   let i = list.length - start
+  //将存放参数的数组转为数组，并除去第一个参数（该组件）
   const ret: Array<any> = new Array(i)
+  //循环拿出数组
   while (i--) {
     ret[i] = list[i + start]
   }
@@ -255,7 +300,7 @@ export function toObject (arr: Array<any>): Object {
  * Stubbing args to make Flow happy without leaving useless transpiled code
  * with ...rest (https://flow.org/blog/2017/05/07/Strict-Function-Call-Arity/).
  */
-export function noop (a?: any, b?: any, c?: any) {}
+export function noop (a?: any, b?: any, c?: any) {} // 占位子 并未真正使用
 
 /**
  * Always return false.
@@ -282,6 +327,16 @@ export function genStaticKeys (modules: Array<ModuleOptions>): string {
  * Check if two values are loosely equal - that is,
  * if they are plain objects, do they have the same shape?
  */
+
+//****
+// 比较两个对象是否为相等的对象
+// 判断两个对象是否
+// 算法描述
+//  1. 假定对象a和b
+//  2. 遍历a中的成员，判断是否每一个a中成员都在b中，并且与b中的对应成员相等
+//  3. 再遍历b中的成员，判断是否每一个b中成员都在a中，并且与a中的对应成员相等
+//  4. 如果成员为引用类型，再递归
+
 export function looseEqual (a: any, b: any): boolean {
   if (a === b) return true
   const isObjectA = isObject(a)
@@ -332,6 +387,7 @@ export function looseIndexOf (arr: Array<mixed>, val: mixed): number {
 /**
  * Ensure a function is called only once.
  */
+// 让一个事件（函数） 只允许调用一次
 export function once (fn: Function): Function {
   let called = false
   return function () {

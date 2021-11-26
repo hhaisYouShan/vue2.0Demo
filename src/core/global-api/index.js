@@ -3,11 +3,11 @@
 import config from '../config'
 import { initUse } from './use'
 import { initMixin } from './mixin'
-import { initExtend } from './extend'
-import { initAssetRegisters } from './assets'
-import { set, del } from '../observer/index'
-import { ASSET_TYPES } from 'shared/constants'
-import builtInComponents from '../components/index'
+import { initExtend } from './extend' 
+import { initAssetRegisters } from './assets' 
+import { set, del } from '../observer/index' 
+import { ASSET_TYPES } from 'shared/constants' 
+import builtInComponents from '../components/index' 
 import { observe } from 'core/observer/index'
 
 import {
@@ -18,7 +18,7 @@ import {
   defineReactive
 } from '../util/index'
 
-export function initGlobalAPI (Vue: GlobalAPI) {
+export function initGlobalAPI(Vue: GlobalAPI) {
   // config
   const configDef = {}
   configDef.get = () => config
@@ -46,13 +46,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.nextTick = nextTick
 
   // 2.6 explicit observable API
-  Vue.observable = <T>(obj: T): T => {
+  Vue.observable = < T > (obj: T): T => {
     observe(obj)
     return obj
   }
 
   Vue.options = Object.create(null)
-  ASSET_TYPES.forEach(type => {
+  ASSET_TYPES.forEach( type => {
     Vue.options[type + 's'] = Object.create(null)
   })
 

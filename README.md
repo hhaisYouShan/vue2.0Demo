@@ -1,12 +1,12 @@
 
 01-Vue2 源码目录结构 （工程代码在src目录下，该目录下有6个目录）
 
-*  compiler #编译相关
+* compiler #编译相关
 * core #核心代码
 * plateform #不同平台的支持
-*  server #服务端渲染
-*  sfc #.vue文件的解析
-*  shared #共享代码
+* server #服务端渲染
+* sfc #.vue文件的解析
+* shared #共享代码
 
 
 02-vue2 dist 输出文字说明

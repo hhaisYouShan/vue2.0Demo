@@ -2,12 +2,26 @@
 
 import config from '../config'
 import Watcher from '../observer/watcher'
-import { mark, measure } from '../util/perf'
-import { createEmptyVNode } from '../vdom/vnode'
-import { updateComponentListeners } from './events'
-import { resolveSlots } from './render-helpers/resolve-slots'
-import { toggleObserving } from '../observer/index'
-import { pushTarget, popTarget } from '../observer/dep'
+import {
+  mark,
+  measure
+} from '../util/perf'
+import {
+  createEmptyVNode
+} from '../vdom/vnode'
+import {
+  updateComponentListeners
+} from './events'
+import {
+  resolveSlots
+} from './render-helpers/resolve-slots'
+import {
+  toggleObserving
+} from '../observer/index'
+import {
+  pushTarget,
+  popTarget
+} from '../observer/dep'
 
 import {
   warn,
@@ -28,9 +42,11 @@ export function setActiveInstance(vm: Component) {
     activeInstance = prevActiveInstance
   }
 }
+//
+export function initLifecycle(vm: Component) {
 
-export function initLifecycle (vm: Component) {
   const options = vm.$options
+  console.log("optionsoptionsoptions",options)
 
   // locate first non-abstract parent
   let parent = options.parent
@@ -45,6 +61,7 @@ export function initLifecycle (vm: Component) {
   vm.$parent = parent
   vm.$root = parent ? parent.$root : vm
 
+  // 初始化数据 $只读   _ 可读 可写
   vm.$children = []
   vm.$refs = {}
 
@@ -56,8 +73,8 @@ export function initLifecycle (vm: Component) {
   vm._isBeingDestroyed = false
 }
 
-export function lifecycleMixin (Vue: Class<Component>) {
-  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+export function lifecycleMixin(Vue: Class<Component> ) {
+  Vue.prototype._update = function (vnode: VNode, hydrating ?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
     const prevVnode = vm._vnode
@@ -67,7 +84,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // based on the rendering backend used.
     if (!prevVnode) {
       // initial render
-      vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
+      vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */ )
     } else {
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
@@ -139,10 +156,10 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
-export function mountComponent (
+export function mountComponent(
   vm: Component,
-  el: ?Element,
-  hydrating?: boolean
+  el: ? Element,
+  hydrating ?: boolean
 ): Component {
   vm.$el = el
   if (!vm.$options.render) {
@@ -196,12 +213,12 @@ export function mountComponent (
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
   new Watcher(vm, updateComponent, noop, {
-    before () {
+    before() {
       if (vm._isMounted && !vm._isDestroyed) {
         callHook(vm, 'beforeUpdate')
       }
     }
-  }, true /* isRenderWatcher */)
+  }, true /* isRenderWatcher */ )
   hydrating = false
 
   // manually mounted instance, call mounted on self
@@ -213,12 +230,12 @@ export function mountComponent (
   return vm
 }
 
-export function updateChildComponent (
+export function updateChildComponent(
   vm: Component,
-  propsData: ?Object,
-  listeners: ?Object,
+  propsData: ? Object,
+  listeners: ? Object,
   parentVnode: MountedComponentVNode,
-  renderChildren: ?Array<VNode>
+  renderChildren: ? Array<VNode>
 ) {
   if (process.env.NODE_ENV !== 'production') {
     isUpdatingChildComponent = true
@@ -242,8 +259,8 @@ export function updateChildComponent (
   // update. Dynamic scoped slots may also have changed. In such cases, a forced
   // update is necessary to ensure correctness.
   const needsForceUpdate = !!(
-    renderChildren ||               // has new static slots
-    vm.$options._renderChildren ||  // has old static slots
+    renderChildren || // has new static slots
+    vm.$options._renderChildren || // has old static slots
     hasDynamicScopedSlot
   )
 
@@ -293,14 +310,14 @@ export function updateChildComponent (
   }
 }
 
-function isInInactiveTree (vm) {
+function isInInactiveTree(vm) {
   while (vm && (vm = vm.$parent)) {
     if (vm._inactive) return true
   }
   return false
 }
 
-export function activateChildComponent (vm: Component, direct?: boolean) {
+export function activateChildComponent(vm: Component, direct ?: boolean) {
   if (direct) {
     vm._directInactive = false
     if (isInInactiveTree(vm)) {
@@ -318,7 +335,7 @@ export function activateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
-export function deactivateChildComponent (vm: Component, direct?: boolean) {
+export function deactivateChildComponent(vm: Component, direct ?: boolean) {
   if (direct) {
     vm._directInactive = true
     if (isInInactiveTree(vm)) {
@@ -334,7 +351,7 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
-export function callHook (vm: Component, hook: string) {
+export function callHook(vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()
   const handlers = vm.$options[hook]

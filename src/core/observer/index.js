@@ -142,7 +142,7 @@ export function defineReactive (
   key: string,
   val: any,
   customSetter?: ?Function,
-  shallow?: boolean
+  shallow ?: boolean
 ) {
   const dep = new Dep()
 

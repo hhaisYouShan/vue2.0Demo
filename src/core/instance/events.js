@@ -7,13 +7,19 @@ import {
   formatComponentName,
   invokeWithErrorHandling
 } from '../util/index'
-import { updateListeners } from '../vdom/helpers/index'
+import {
+  updateListeners
+} from '../vdom/helpers/index'
 
-export function initEvents (vm: Component) {
-  vm._events = Object.create(null)
+export function initEvents(vm: Component) {
+  console.log("执行了initEvents")
+  // 储放各种事件
+  vm._events = Object.create(null) 
   vm._hasHookEvent = false
   // init parent attached events
-  const listeners = vm.$options._parentListeners
+
+  const listeners = vm.$options._parentListeners // 前提 
+  console.log("，listeners",listeners) 
   if (listeners) {
     updateComponentListeners(vm, listeners)
   }
@@ -21,17 +27,17 @@ export function initEvents (vm: Component) {
 
 let target: any
 
-function add (event, fn) {
+function add(event, fn) {
   target.$on(event, fn)
 }
 
-function remove (event, fn) {
+function remove(event, fn) {
   target.$off(event, fn)
 }
 
-function createOnceHandler (event, fn) {
+function createOnceHandler(event, fn) {
   const _target = target
-  return function onceHandler () {
+  return function onceHandler() {
     const res = fn.apply(null, arguments)
     if (res !== null) {
       _target.$off(event, onceHandler)
@@ -49,9 +55,9 @@ export function updateComponentListeners (
   target = undefined
 }
 
-export function eventsMixin (Vue: Class<Component>) {
+export function eventsMixin(Vue: Class<Component> ) {
   const hookRE = /^hook:/
-  Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
+  Vue.prototype.$on = function (event: string | Array<string> , fn: Function): Component {
     const vm: Component = this
     if (Array.isArray(event)) {
       for (let i = 0, l = event.length; i < l; i++) {
@@ -70,7 +76,8 @@ export function eventsMixin (Vue: Class<Component>) {
 
   Vue.prototype.$once = function (event: string, fn: Function): Component {
     const vm: Component = this
-    function on () {
+
+    function on() {
       vm.$off(event, on)
       fn.apply(vm, arguments)
     }
@@ -79,7 +86,7 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
-  Vue.prototype.$off = function (event?: string | Array<string>, fn?: Function): Component {
+  Vue.prototype.$off = function (event ?: string | Array<string> , fn ?: Function): Component {
     const vm: Component = this
     // all
     if (!arguments.length) {

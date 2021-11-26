@@ -2,11 +2,11 @@
 
 import config from 'core/config'
 import { warn, cached } from 'core/util/index'
-import { mark, measure } from 'core/util/perf'
+import { mark, measure } from 'core/util/perf' // 调试用工具
 
 import Vue from './runtime/index'
 import { query } from './util/index'
-import { compileToFunctions } from './compiler/index'
+import { compileToFunctions } from './compiler/index' // 用来render的工具方法
 import { shouldDecodeNewlines, shouldDecodeNewlinesForHref } from './util/compat'
 
 const idToTemplate = cached(id => {
@@ -14,13 +14,18 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// 将原始的$mount存储起来，然后 实现新的 $moute
+// 然后再调用$mount 就是在扩展原有的$mount方法
+
+// 就是生成render,在调用 系统的 原有的 $mount 函数
+
 const mount = Vue.prototype.$mount
 
 // 扩展挂载
 //flow 语法
 Vue.prototype.$mount = function (
-  el?: string | Element,
-  hydrating?: boolean
+  el ?: string | Element,
+  hydrating ?: boolean
 ): Component {
   el = el && query(el)
 
@@ -33,8 +38,8 @@ Vue.prototype.$mount = function (
   }
   // 处理el 和 template
   const options = this.$options
-  // resolve template/el and convert to render function
 
+  // resolve template/el and convert to render function
   // render 不存在时 才考虑el和template
   if (!options.render) {
     let template = options.template
@@ -52,8 +57,8 @@ Vue.prototype.$mount = function (
             )
           }
         }
-      } 
-         //template 是dom元素
+      }
+      //template 是dom元素
       else if (template.nodeType) {
         template = template.innerHTML
       } else {
@@ -64,10 +69,10 @@ Vue.prototype.$mount = function (
       }
     }
     // el 作为模版 
-     else if (el) {
+    else if (el) {
 
       template = getOuterHTML(el)
-    }  
+    }
     //挂载过程
     if (template) {
       /* istanbul ignore if */
@@ -75,7 +80,10 @@ Vue.prototype.$mount = function (
         mark('compile')
       }
       // 将template字符串转换为render函数
-      const { render, staticRenderFns } = compileToFunctions(template, {
+      const {
+        render,
+        staticRenderFns
+      } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,
         shouldDecodeNewlinesForHref,
@@ -99,13 +107,13 @@ Vue.prototype.$mount = function (
  * Get outerHTML of elements, taking care
  * of SVG elements in IE as well.
  */
-function getOuterHTML (el: Element): string {
+function getOuterHTML(el: Element): string {
   if (el.outerHTML) {
-    console.log("el.outerHTML",el.outerHTML)
+    console.log("el.outerHTML", el.outerHTML)
     return el.outerHTML
   } else {
     const container = document.createElement('div')
-    console.log("el.outerHTML",container)
+    console.log("el.outerHTML", container)
     container.appendChild(el.cloneNode(true))
     return container.innerHTML
 

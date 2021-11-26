@@ -1,6 +1,8 @@
 /* @flow */
 
-import { warn } from 'core/util/index'
+import {
+  warn
+} from 'core/util/index'
 
 export * from './attrs'
 export * from './class'
@@ -9,7 +11,8 @@ export * from './element'
 /**
  * Query an element selector if it's not an element already.
  */
-export function query (el: string | Element): Element {
+//判断当前节点 是否已经存在
+export function query(el: string | Element): Element {
   if (typeof el === 'string') {
     const selected = document.querySelector(el)
     if (!selected) {

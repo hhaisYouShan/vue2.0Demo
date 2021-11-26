@@ -48,17 +48,19 @@ export function proxy(target: Object, sourceKey: string, key: string) {
 export function initState(vm: Component) {
   vm._watchers = [];
   const opts = vm.$options;
-
+  // 处理 options.props的成员 一般定义组件的时候，用于定义对外的成员，
   if (opts.props) initProps(vm, opts.props);
-  if (opts.methods) initMethods(vm, opts.methods);
-  //data处理 响应化处理
+  // 处理options.methods的成员 处理方法成员
+    if (opts.methods) initMethods(vm, opts.methods);
+  // data处理 响应化处理
   if (opts.data) {
     initData(vm);
   } else {
-    observe((vm._data = {}), true /* asRootData */);
+    observe((vm._data = {}), true /* asRootData */ );
   }
+  // 处理options.computed 计算属性
   if (opts.computed) initComputed(vm, opts.computed);
-
+  // 处理options.watch 
   if (opts.watch && opts.watch !== nativeWatch) {
     initWatch(vm, opts.watch);
   }
@@ -94,21 +96,22 @@ function initProps(vm: Component, propsOptions: Object) {
         if (!isRoot && !isUpdatingChildComponent) {
           warn(
             `Avoid mutating a prop directly since the value will be ` +
-              `overwritten whenever the parent component re-renders. ` +
-              `Instead, use a data or computed property based on the prop's ` +
-              `value. Prop being mutated: "${key}"`,
+            `overwritten whenever the parent component re-renders. ` +
+            `Instead, use a data or computed property based on the prop's ` +
+            `value. Prop being mutated: "${key}"`,
             vm
           );
         }
       });
     } else {
+      // 转换为响应式
       defineReactive(props, key, value);
     }
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
     if (!(key in vm)) {
-      proxy(vm, `_props`, key);
+      proxy(vm, `_props`, key); // 将_props 上的成员映射到vue实例上，
     }
   }
   toggleObserving(true);
@@ -117,14 +120,10 @@ function initProps(vm: Component, propsOptions: Object) {
 function initData(vm: Component) {
   let data = vm.$options.data;
   data = vm._data = typeof data === "function" ? getData(data, vm) : data || {};
+  console.log("data", data)
   if (!isPlainObject(data)) {
     data = {};
-    process.env.NODE_ENV !== "production" &&
-      warn(
-        "data functions should return an object:\n" +
-          "https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function",
-        vm
-      );
+    process.env.NODE_ENV !== "production" && warn( "data functions should return an object:\n" + "https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function", vm );
   }
   // proxy data on instance
   const keys = Object.keys(data);
@@ -145,7 +144,7 @@ function initData(vm: Component) {
       process.env.NODE_ENV !== "production" &&
         warn(
           `The data property "${key}" is already declared as a prop. ` +
-            `Use prop default value instead.`,
+          `Use prop default value instead.`,
           vm
         );
     } else if (!isReserved(key)) {
@@ -153,11 +152,13 @@ function initData(vm: Component) {
     }
   }
   // observe data 数据遍历开始 核心代码
-  observe(data, true /* asRootData */);
+  observe(data, true /* asRootData */ );
 }
 
 export function getData(data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
+  // 由于此时式Vue的初始化 还没有进行模版渲染，所以不需要进行依赖收集，在pushTarget 的时候传入 空
+  // 就将全局的Watcher 设置为 undefined, 依赖收集的时候有一个判断式Dep.target存在的时候才收集
   pushTarget();
   try {
     return data.call(vm, vm);
@@ -169,7 +170,9 @@ export function getData(data: Function, vm: Component): any {
   }
 }
 
-const computedWatcherOptions = { lazy: true };
+const computedWatcherOptions = {
+  lazy: true
+};
 
 function initComputed(vm: Component, computed: Object) {
   // $flow-disable-line
@@ -199,7 +202,8 @@ function initComputed(vm: Component, computed: Object) {
     // at instantiation here.
     if (!(key in vm)) {
       defineComputed(vm, key, userDef);
-    } else if (process.env.NODE_ENV !== "production") {
+    } 
+    else if (process.env.NODE_ENV !== "production") {
       if (key in vm.$data) {
         warn(`The computed property "${key}" is already defined in data.`, vm);
       } else if (vm.$options.props && key in vm.$options.props) {
@@ -219,16 +223,16 @@ export function defineComputed(
 ) {
   const shouldCache = !isServerRendering();
   if (typeof userDef === "function") {
-    sharedPropertyDefinition.get = shouldCache
-      ? createComputedGetter(key)
-      : createGetterInvoker(userDef);
+    sharedPropertyDefinition.get = shouldCache ?
+      createComputedGetter(key) :
+      createGetterInvoker(userDef);
     sharedPropertyDefinition.set = noop;
   } else {
-    sharedPropertyDefinition.get = userDef.get
-      ? shouldCache && userDef.cache !== false
-        ? createComputedGetter(key)
-        : createGetterInvoker(userDef.get)
-      : noop;
+    sharedPropertyDefinition.get = userDef.get ?
+      shouldCache && userDef.cache !== false ?
+      createComputedGetter(key) :
+      createGetterInvoker(userDef.get) :
+      noop;
     sharedPropertyDefinition.set = userDef.set || noop;
   }
   if (
@@ -267,6 +271,8 @@ function createGetterInvoker(fn) {
 }
 
 function initMethods(vm: Component, methods: Object) {
+    console.log("initvm",vm)
+    console.log("initMethodsmethods",methods)
   const props = vm.$options.props;
   for (const key in methods) {
     if (process.env.NODE_ENV !== "production") {
@@ -275,7 +281,7 @@ function initMethods(vm: Component, methods: Object) {
           `Method "${key}" has type "${typeof methods[
             key
           ]}" in the component definition. ` +
-            `Did you reference the function correctly?`,
+          `Did you reference the function correctly?`,
           vm
         );
       }
@@ -285,12 +291,12 @@ function initMethods(vm: Component, methods: Object) {
       if (key in vm && isReserved(key)) {
         warn(
           `Method "${key}" conflicts with an existing Vue instance method. ` +
-            `Avoid defining component methods that start with _ or $.`
+          `Avoid defining component methods that start with _ or $.`
         );
       }
     }
-    vm[key] =
-      typeof methods[key] !== "function" ? noop : bind(methods[key], vm);
+    vm[key] = typeof methods[key] !== "function" ? noop : bind(methods[key], vm);
+    // 将methods 属性中的方法 绑定上下文后 挂载到vue 实例上
   }
 }
 
@@ -311,7 +317,7 @@ function createWatcher(
   vm: Component,
   expOrFn: string | Function,
   handler: any,
-  options?: Object
+  options ?: Object
 ) {
   if (isPlainObject(handler)) {
     options = handler;
@@ -323,7 +329,7 @@ function createWatcher(
   return vm.$watch(expOrFn, handler, options);
 }
 
-export function stateMixin(Vue: Class<Component>) {
+export function stateMixin(Vue: Class<Component> ) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
@@ -339,7 +345,7 @@ export function stateMixin(Vue: Class<Component>) {
     dataDef.set = function () {
       warn(
         "Avoid replacing instance root $data. " +
-          "Use nested data properties instead.",
+        "Use nested data properties instead.",
         this
       );
     };
@@ -356,7 +362,7 @@ export function stateMixin(Vue: Class<Component>) {
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
-    options?: Object
+    options ?: Object
   ): Function {
     const vm: Component = this;
     if (isPlainObject(cb)) {

@@ -10,6 +10,7 @@ import { initLifecycle, callHook } from './lifecycle'
 import { initProvide, initInjections } from './inject'
 import { extend, mergeOptions, formatComponentName } from '../util/index'
 
+// Vue的源码中每一个类型的实例 都会有一个 唯一标识 
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
@@ -17,11 +18,13 @@ export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
+    // 唯一biao shi
     vm._uid = uid++
 
-    let startTag, endTag
+    let startTag, endTag  // 测试性能
     /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
+    // 看见这个  想到测试
+    if (process.env.NODE_ENV !== 'production' && config.performance && mark) { 
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
       mark(startTag)
@@ -34,8 +37,11 @@ export function initMixin (Vue: Class<Component>) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+      
+      // 初始化内部组件 针对组件
       initInternalComponent(vm, options)
     } else {
+        // 合并
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -44,19 +50,20 @@ export function initMixin (Vue: Class<Component>) {
     }
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
+    //
       initProxy(vm)
     } else {
       vm._renderProxy = vm
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm) // $parent,$root,$children,$refs 初始化
-    initEvents(vm) // 事件监听：处理父组件传递的监听器
-    initRender(vm) // $slots,$scopedSlots,_c,$createElement 
-    callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props  // 获取注入数据
-    initState(vm)  // 初始化props，methods，data，computed，watch 
-    initProvide(vm) // resolve provide after data/props  // 提供数据注入
+    initLifecycle(vm) // $parent,$root,$children,$refs 初始化       初始化生命周期的 一些状态变量
+    initEvents(vm) // 事件监听：处理父组件传递的监听器                  初始化事件的 容器
+    initRender(vm) // $slots,$scopedSlots,_c,$createElement         初始化渲染标记用到的变量
+    callHook(vm, 'beforeCreate')                        //          调用生命周期函数
+    initInjections(vm) // resolve injections before data/props  //  获取注入数据  
+    initState(vm)  // 初始化props，methods，data，computed，watch     初始化状态数据
+    initProvide(vm) // resolve provide after data/props  // 提供数据注入 
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -67,7 +74,10 @@ export function initMixin (Vue: Class<Component>) {
     }
     // 如果存在el宿主，则自动执行挂载，不需要手动挂载
     if (vm.$options.el) {
-      vm.$mount(vm.$options.el)
+      vm.$mount(vm.$options.el) // 组件挂载 将组件挂载到el描述的元素上
+      // 会先调用 扩展的 那个 $mount 方法，生成render
+      // 再调用 原始的 $mount 方法  获得元素，再调用mountComponent方法
+      // 这两个方法都定义在platforms/web 里面
     }
   }
 }

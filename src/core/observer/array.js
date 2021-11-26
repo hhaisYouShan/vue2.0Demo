@@ -3,7 +3,9 @@
  * dynamically accessing methods on Array prototype
  */
 
-import { def } from '../util/index'
+import {
+  def
+} from '../util/index'
 
 const arrayProto = Array.prototype
 
@@ -24,12 +26,12 @@ const methodsToPatch = [
  * Intercept mutating methods and emit events
  */
 methodsToPatch.forEach(function (method) {
-  console.log("执行了array 内方法",methodsToPatch)
+  // console.log("执行了array 内方法",methodsToPatch)
   // cache original method
   // 数组的原型方法
   const original = arrayProto[method]
   // 添加额外行为
-  def(arrayMethods, method, function mutator (...args) {
+  def(arrayMethods, method, function mutator(...args) {
     // 执行原先的任务
     const result = original.apply(this, args)
     //额外任务 通知更新

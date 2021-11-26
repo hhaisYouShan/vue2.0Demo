@@ -1,16 +1,24 @@
 /* @flow */
 /* globals MutationObserver */
 
-import { noop } from 'shared/util'
-import { handleError } from './error'
-import { isIE, isIOS, isNative } from './env'
+import {
+  noop
+} from 'shared/util'
+import {
+  handleError
+} from './error'
+import {
+  isIE,
+  isIOS,
+  isNative
+} from './env'
 
 export let isUsingMicroTask = false
 
 const callbacks = []
 let pending = false
 
-function flushCallbacks () {
+function flushCallbacks() {
   pending = false
   const copies = callbacks.slice(0)
   callbacks.length = 0
@@ -52,10 +60,10 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
   isUsingMicroTask = true
 } else if (!isIE && typeof MutationObserver !== 'undefined' && (
-  isNative(MutationObserver) ||
-  // PhantomJS and iOS 7.x
-  MutationObserver.toString() === '[object MutationObserverConstructor]'
-)) {
+    isNative(MutationObserver) ||
+    // PhantomJS and iOS 7.x
+    MutationObserver.toString() === '[object MutationObserverConstructor]'
+  )) {
   // Use MutationObserver where native Promise is not available,
   // e.g. PhantomJS, iOS7, Android 4.4
   // (#6466 MutationObserver is unreliable in IE11)
@@ -84,7 +92,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
-export function nextTick (cb?: Function, ctx?: Object) {
+export function nextTick(cb ?: Function, ctx ?: Object) {
   let _resolve
   callbacks.push(() => {
     if (cb) {
@@ -107,4 +115,5 @@ export function nextTick (cb?: Function, ctx?: Object) {
       _resolve = resolve
     })
   }
+  console.log("next-tick,callbacks", callbacks)
 }

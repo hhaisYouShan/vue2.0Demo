@@ -1,40 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="../../dist/vue.js"></script>
-</head>
-<body>
-  <div id="root">
-    <div>123</div>  
-    <div>{{name}}</div>
-    <ul>
-      <li v-for="(item,index) in arrList" :key='index'>{{item}}</li>
-    </ul>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div>123</div>
+      <div>{{name}}</div>
+      <ul>
+        <li v-for="(item,index) in arrList" :key="index">{{item}}</li>
+      </ul>
 
-  </div>
-  <script>
-     console.log( root );
-    let app= new Vue({
-      el:'#root',
-      data:{
-        name:"张三",
-        arrList:['张三','李四','吴昂呜']
-      },
-      created(){
-        this.changeArrList()
-      },
-      methods:{
-        changeArrList(){
-          this.arrList[0]="hhas"
-        }
-      }
-    })
-    console.log( root );
-  </script>
-  
-</body>
+      <chilen></chilen>
+    </div>
+    <script>
+      // console.log(root);
+      // console.log(Vue);
+
+      // let Vue = new Vue();
+
+      Vue.component("chilen", {
+        template: `<div v-if="arrList.length>0">
+            <div v-for="(item ,index) in arrList" :key=index>{{item}}</div>
+            <div id='textId'>{{textMsg}}</div>
+            <button @click='changeMessage'>改变</button>
+
+            </div> `,
+        data() {
+          return {
+            message: "未更新",
+            arrList: ["未更新1", "未更新2", "未更新3", "未更新4"],
+            textMsg: "原始值",
+          };
+        },
+
+        methods: {
+          changeMessage() {
+            this.arrList = ["新的1", "新的2"];
+          },
+          changeNextTick() {
+            this.textMsg = "修改后的文本值";
+            console.log("this.textMsg", this.textMsg);
+            this.$nextTick(() => {
+              let domTxt = document.getElementById("textId").innerText;
+              console.log("domTxt", domTxt); //输出可以看到vue数据修改后并没有DOM没有立即更新，
+              if (domTxt === "原始值") {
+                console.log("文本data被修改后dom内容没立即更新");
+              } else {
+                // this.textMsg = "修改后的文本值";
+                console.log("文本data被修改后dom内容被马上更新了");
+              }
+            });
+          },
+        },
+
+        // beforeCreate() {
+        //   console.log("这是组件执行了beforeCreate");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // created() {
+        //   console.log("这是组件执行了created");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // beforeMount() {
+        //   console.log("这是组件执行了beforeMount");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // mounted() {
+        //   this.changeNextTick();
+        //   console.log("这是组件执行了mounted");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // beforeUpdate() {
+        //   console.log("这是组件执行了beforeUpdate");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // updated() {
+        //   console.log("这是组件执行了updated");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // beforeDestroy() {
+        //   console.log("这是组件执行了beforeDestroy");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+        // destroyed() {
+        //   console.log("这是组件执行了destroyed");
+        //   console.log("~~~~~~~~~~~~~~~~~~");
+        // },
+      });
+
+      let app = new Vue({
+        el: "#root",
+        data: {
+          name: "名字",
+          arrList: ["张三", "李四", "吴昂呜"],
+        },
+        // compontents: { chilen },
+
+        // beforeCreate() {
+        //   console.log("执行了beforeCreate");
+        //   console.log("-------------------");
+        // },
+        // created() {
+        //   console.log("执行了created");
+        //   console.log("-------------------");
+        //   this.changeArrList();
+        // },
+        // beforeMount() {
+        //   console.log("执行了beforeMount");
+        //   console.log("-------------------");
+        // },
+        // mounted() {
+        //   console.log("执行了mounted");
+        //   console.log("-------------------");
+        // },
+        // beforeUpdate() {
+        //   console.log("执行了beforeUpdate");
+        //   console.log("-------------------");
+        // },
+        // updated() {
+        //   console.log("执行了updated");
+        //   console.log("-------------------");
+        // },
+        // beforeDestroy() {
+        //   console.log("执行了beforeDestroy");
+        //   console.log("-------------------");
+        // },
+        // destroyed() {
+        //   console.log("执行了destroyed");
+        //   console.log("-------------------");
+        // },
+
+        methods: {
+          changeArrList() {
+            this.arrList[0] = "改变后的名字";
+          },
+        },
+      });
+
+      // console.log(root);
+    </script>
+  </body>
 </html>
