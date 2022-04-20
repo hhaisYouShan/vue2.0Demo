@@ -12,7 +12,10 @@
       <div>123</div>
       <div>{{name}}</div>
       <ul>
-        <li v-for="(item,index) in arrList" :key="index">{{item}}</li>
+        <template v-if="isArrList">
+          <li v-for="(item,index) in arrList"  :key="index">{{item}}</li>
+        </template>
+       
       </ul>
 
       <chilen></chilen>
@@ -36,6 +39,11 @@
             arrList: ["未更新1", "未更新2", "未更新3", "未更新4"],
             textMsg: "原始值",
           };
+        },
+        computed:{
+          isArrList(){
+            return  this.arrList&& this.arrList.length>0 
+          }
         },
 
         methods: {

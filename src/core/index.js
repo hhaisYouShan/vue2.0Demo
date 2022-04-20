@@ -3,6 +3,7 @@ import { initGlobalAPI } from './global-api/index'
 import { isServerRendering } from 'core/util/env'
 import { FunctionalRenderContext } from 'core/vdom/create-functional-component'
 
+console.log("./instance/index",Vue)
 // 定义全局api
 initGlobalAPI(Vue)
 

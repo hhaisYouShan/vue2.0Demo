@@ -2,26 +2,12 @@
 
 import config from '../config'
 import Watcher from '../observer/watcher'
-import {
-  mark,
-  measure
-} from '../util/perf'
-import {
-  createEmptyVNode
-} from '../vdom/vnode'
-import {
-  updateComponentListeners
-} from './events'
-import {
-  resolveSlots
-} from './render-helpers/resolve-slots'
-import {
-  toggleObserving
-} from '../observer/index'
-import {
-  pushTarget,
-  popTarget
-} from '../observer/dep'
+import { mark, measure } from '../util/perf'
+import { createEmptyVNode } from '../vdom/vnode'
+import { updateComponentListeners } from './events'
+import { resolveSlots } from './render-helpers/resolve-slots'
+import { toggleObserving } from '../observer/index'
+import { pushTarget, popTarget } from '../observer/dep'
 
 import {
   warn,
@@ -204,6 +190,7 @@ export function mountComponent(
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // 用户$mount()时，定义updateComponent
     updateComponent = () => {
       vm._update(vm._render(), hydrating)
     }

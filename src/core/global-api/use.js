@@ -8,7 +8,7 @@ export function initUse(Vue: GlobalAPI) {
   Vue.use = function (plugin: Function | Object) {
     // 限制了自定义组建的类型
     const installedPlugins = (this._installedPlugins || (this._installedPlugins = []))
-    //保存注册组件的数组，不存在及创建
+    // 保存注册组件的数组，不存在及创建
     if (installedPlugins.indexOf(plugin) > -1) {
       //判断该组件是否注册过，存在return Vue对象
       return this
@@ -16,7 +16,7 @@ export function initUse(Vue: GlobalAPI) {
 
     // additional parameters
     //调用`toArray`方法
-    const args = toArray(arguments, 1)
+    const args = toArray(arguments, 1) // 这啥意思
     args.unshift(this)
     //将Vue对象拼接到数组头部
     if (typeof plugin.install === 'function') {

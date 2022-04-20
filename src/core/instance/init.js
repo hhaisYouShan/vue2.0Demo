@@ -33,6 +33,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    // 合并选项
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -41,7 +42,7 @@ export function initMixin (Vue: Class<Component>) {
       // 初始化内部组件 针对组件
       initInternalComponent(vm, options)
     } else {
-        // 合并
+      //根实例
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -60,10 +61,10 @@ export function initMixin (Vue: Class<Component>) {
     initLifecycle(vm) // $parent,$root,$children,$refs 初始化       初始化生命周期的 一些状态变量
     initEvents(vm) // 事件监听：处理父组件传递的监听器                  初始化事件的 容器
     initRender(vm) // $slots,$scopedSlots,_c,$createElement         初始化渲染标记用到的变量
-    callHook(vm, 'beforeCreate')                        //          调用生命周期函数
-    initInjections(vm) // resolve injections before data/props  //  获取注入数据  
-    initState(vm)  // 初始化props，methods，data，computed，watch     初始化状态数据
-    initProvide(vm) // resolve provide after data/props  // 提供数据注入 
+    callHook(vm, 'beforeCreate')                 //                 调用生命周期函数
+    initInjections(vm) // resolve injections before data/props      获取注入数据  
+    initState(vm)  // 初始化props，methods，data，computed，watch     初始化状态数据  响应式
+    initProvide(vm) // resolve provide after data/props             提供数据注入 
     callHook(vm, 'created')
 
     /* istanbul ignore if */

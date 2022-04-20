@@ -63,7 +63,7 @@ declare interface VNodeData {
     value: any;
     callback: Function;
   };
-};
+}
 
 declare type VNodeDirective = {
   name: string;
