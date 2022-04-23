@@ -29,13 +29,16 @@ export function initExtend (Vue: GlobalAPI) {
     if (process.env.NODE_ENV !== 'production' && name) {
       validateComponentName(name)
     }
-
+    //创建了一个vueComponent类
+    //Sub vue子类
     const Sub = function VueComponent (options) {
       this._init(options)
     }
+    //继承于Vue类
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    // 选项合并
     Sub.options = mergeOptions(
       Super.options,
       extendOptions

@@ -1,4 +1,7 @@
 /* @flow */
+/**
+ * 组件定义
+ */
 
 import { ASSET_TYPES } from 'shared/constants'
 import { isPlainObject, validateComponentName } from '../util/index'
@@ -7,6 +10,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
    */
+  // ['compont','filter','directive']
   ASSET_TYPES.forEach(type => {
     Vue[type] = function (
       id: string,
@@ -19,13 +23,17 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         if (process.env.NODE_ENV !== 'production' && type === 'component') {
           validateComponentName(id)
         }
+        // def 对象
         if (type === 'component' && isPlainObject(definition)) {
+          // 定义组件name
           definition.name = definition.name || id
+          // extend创建组件构造函数，def变成了构造函数
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }
         }
+        // 注册 this.options[components][comp]=Ctor
         this.options[type + 's'][id] = definition
         return definition
       }
