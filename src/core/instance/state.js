@@ -34,7 +34,7 @@ const sharedPropertyDefinition = {
   get: noop,
   set: noop,
 };
-
+// 数据代理
 export function proxy(target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter() {
     return this[sourceKey][key];
@@ -45,6 +45,8 @@ export function proxy(target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition);
 }
 
+// 初始化状态 注意这里的顺序 比如我经常面试会问到 是否能在data里面直接使用prop的值 为什么？
+// 这里初始化的顺序依次是 prop>methods>data>computed>watch
 export function initState(vm: Component) {
   vm._watchers = [];
   const opts = vm.$options;
@@ -54,7 +56,7 @@ export function initState(vm: Component) {
     if (opts.methods) initMethods(vm, opts.methods);
   // data处理 响应化处理
   if (opts.data) {
-    initData(vm);
+    initData(vm); // 初始化data
   } else {
     observe((vm._data = {}), true /* asRootData */ );
   }
@@ -117,11 +119,14 @@ function initProps(vm: Component, propsOptions: Object) {
   toggleObserving(true);
 }
 
+// 初始化data 数据
 function initData(vm: Component) {
   let data = vm.$options.data;
-  // 如果data 是函数，则执行之并将结果作为data选项的值 
+  // 如果data 是函数，则执行之并将结果作为data选项的值  
+  // data  实例_data的属性给data
   data = vm._data = typeof data === "function" ? getData(data, vm) : data || {};
   console.log("data", data)
+
   if (!isPlainObject(data)) {
     data = {};
     process.env.NODE_ENV !== "production" && warn( "data functions should return an object:\n" + "https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function", vm );
@@ -149,6 +154,7 @@ function initData(vm: Component) {
           vm
         );
     } else if (!isReserved(key)) {
+    // 把data数据代理到vm 也就是Vue实例上面 我们可以使用this.a来访问this._data.a
       proxy(vm, `_data`, key);
     }
   }

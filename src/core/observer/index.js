@@ -46,13 +46,16 @@ export class Observer {
     this.vmCount = 0
     def(value, '__ob__', this)
     //当前对象是数组
+    // 对数组进行额外判断 重写其方法
     if (Array.isArray(value)) {
-      if (hasProto) {
-        protoAugment(value, arrayMethods)
+
+      // 
+      if (hasProto) { //export const hasProto = '__proto__' in {}
+        protoAugment(value, arrayMethods)//arrayMethods==>
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
-      this.observeArray(value)
+      this.observeArray(value) // 如果数组里面还包含数组 需要递归判断
     } else {
       this.walk(value)
     }
@@ -65,6 +68,7 @@ export class Observer {
    */
   //
   walk (obj: Object) {
+    // 将对象上的所有属性依次进行观察
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i])
@@ -76,7 +80,7 @@ export class Observer {
    */
   observeArray (items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
-      observe(items[i])
+      observe(items[i]) 
     }
   }
 }
@@ -89,6 +93,7 @@ export class Observer {
  */
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
+  // 通过重写数组原型方法来对数组的七种方法进行拦截
   target.__proto__ = src
   /* eslint-enable no-proto */
 }
@@ -137,6 +142,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
  * Define a reactive property on an Object.
  */
 //遍历data
+// Object.defineProperty数据劫持核心 兼容性在ie9以及以上
 export function defineReactive (
   obj: Object,
   key: string,
@@ -160,6 +166,8 @@ export function defineReactive (
     //递归
   let childOb = !shallow && observe(val)
   //定义数据拦截
+  // --如果value还是一个对象会继续走一遍odefineReactive 层层遍历一直到value不是对象才停止
+  //   思考？如果Vue数据嵌套层级过深 >>性能会受影响
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
@@ -173,7 +181,7 @@ export function defineReactive (
           childOb.dep.depend()
           // 如果是数据还要继续处理
           if (Array.isArray(value)) {
-            dependArray(value)
+            dependArray(value) //数组
           }
         }
       }
