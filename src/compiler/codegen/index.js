@@ -46,6 +46,7 @@ export function generate (
 ): CodegenResult {
   const state = new CodegenState(options)
   const code = ast ? genElement(ast, state) : '_c("div")'
+  // 使用with语法改变作用域为this  之后调用render函数可以使用call改变this 方便code里面的变量取值
   return {
     render: `with(this){return ${code}}`,
     staticRenderFns: state.staticRenderFns

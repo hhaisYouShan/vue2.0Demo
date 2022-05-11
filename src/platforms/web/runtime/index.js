@@ -46,6 +46,7 @@ Vue.prototype.$mount = function (
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined 
+  // 将当前组件实例挂载到真实的el节点上面
   return mountComponent(this, el, hydrating)
 }
 

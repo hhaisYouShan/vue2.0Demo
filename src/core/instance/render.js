@@ -1,4 +1,5 @@
 /* @flow */
+//render 函数转化成虚拟 dom 核心方法 _render
 
 import {
   warn,
@@ -69,6 +70,7 @@ export function renderMixin (Vue: Class<Component>) {
 
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
+    // 获取模板编译生成的render方法
     const { render, _parentVnode } = vm.$options
 
     if (_parentVnode) {
@@ -81,6 +83,7 @@ export function renderMixin (Vue: Class<Component>) {
 
     // set parent vnode. this allows render functions to have access
     // to the data on the placeholder node.
+    
     vm.$vnode = _parentVnode
     // render self
     let vnode
@@ -89,6 +92,7 @@ export function renderMixin (Vue: Class<Component>) {
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm
+     // 生成vnode--虚拟dom
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
       handleError(e, vm, `render`)
@@ -103,6 +107,7 @@ export function renderMixin (Vue: Class<Component>) {
           vnode = vm._vnode
         }
       } else {
+      
         vnode = vm._vnode
       }
     } finally {

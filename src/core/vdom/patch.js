@@ -580,8 +580,10 @@ export function createPatchFunction (backend) {
       if (isDef(oldCh) && isDef(ch)) {
         // 比孩子， reorder
         // 递归
-        if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
-      } else if (isDe f(ch)) {
+        if (oldCh !== ch){
+          updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
+        } 
+      } else if (isDef(ch)) {
         // 新节点有孩子
         if (process.env.NODE_ENV !== 'production') {
           checkDuplicateKeys(ch)

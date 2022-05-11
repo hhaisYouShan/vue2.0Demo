@@ -2,6 +2,10 @@
  * not type checking this file because flow doesn't play well with
  * dynamically accessing methods on Array prototype
  */
+/**
+ * 定义 arrayMethods 对象，用于增强 Array.prototype
+ * 当访问 arrayMethods 对象上的那七个方法时会被拦截，以实现数组响应式
+ */
 
 import {
   def
@@ -13,7 +17,7 @@ const arrayProto = Array.prototype
 // 这里是面向切片编程思想（AOP）--不破坏封装的前提下，动态的扩展功能
 export const arrayMethods = Object.create(arrayProto)
 
-
+// 操作数组的七个方法，这七个方法可以改变数组自身
 const methodsToPatch = [
   'push',
   'pop',
@@ -27,12 +31,16 @@ const methodsToPatch = [
 /**
  * Intercept mutating methods and emit events
  */
+/**
+ * 拦截变异方法并触发事件
+ */
 methodsToPatch.forEach(function (method) {
-  // console.log("执行了array 内方法",methodsToPatch)
   // cache original method
   // 数组的原型方法
+  // 缓存原生方法，比如 push
   const original = arrayProto[method]
   // 添加额外行为
+  // def 就是 Object.defineProperty，拦截 arrayMethods.method 的访问
   def(arrayMethods, method, function mutator(...args) {
     // 执行原先的任务
     // 保留原型方法的执行结果

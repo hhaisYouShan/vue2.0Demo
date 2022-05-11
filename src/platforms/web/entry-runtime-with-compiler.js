@@ -42,8 +42,8 @@ Vue.prototype.$mount = function (
   // resolve template/el and convert to render function
   // render 不存在时 才考虑el和template
   if (!options.render) {
+     // 如果存在template属性
     let template = options.template
-
     if (template) {
       if (typeof template === 'string') {
         //template 是选择器的情况
@@ -60,6 +60,7 @@ Vue.prototype.$mount = function (
       }
       //template 是dom元素
       else if (template.nodeType) {
+        // 如果不存在render和template 但是存在el属性 直接将模板赋值到el所在的外层html结构（就是el本身 并不是父元素）
         template = template.innerHTML
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -70,7 +71,7 @@ Vue.prototype.$mount = function (
     }
     // el 作为模版 
     else if (el) {
-
+      // 如果不存在render和template 但是存在el属性 直接将模板赋值到el所在的外层html结构（就是el本身 并不是父元素）
       template = getOuterHTML(el)
     }
     //挂载过程

@@ -57,6 +57,7 @@ let platformMustUseProp
 let platformGetTagNamespace
 let maybeComponent
 
+// 生成ast方法
 export function createASTElement(
   tag: string,
   attrs: Array<ASTAttr> ,

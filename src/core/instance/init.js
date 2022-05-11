@@ -57,7 +57,7 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
-    vm._self = vm
+    vm._self = vm // _self 啥意思 
     initLifecycle(vm) // $parent,$root,$children,$refs 初始化       初始化生命周期的 一些状态变量
     initEvents(vm) // 事件监听：处理父组件传递的监听器                  初始化事件的 容器
     initRender(vm) // $slots,$scopedSlots,_c,$createElement         初始化渲染标记用到的变量

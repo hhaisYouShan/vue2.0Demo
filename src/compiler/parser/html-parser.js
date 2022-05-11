@@ -14,13 +14,13 @@ import { isNonPhrasingTag } from 'web/compiler/util'
 import { unicodeRegExp } from 'core/util/lang'
 
 // Regular Expressions for parsing tags and attributes
-const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
+const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/ // 匹配属性  形如 id="app"
 const dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+?\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
 const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
-const qnameCapture = `((?:${ncname}\\:)?${ncname})`
-const startTagOpen = new RegExp(`^<${qnameCapture}`)
-const startTagClose = /^\s*(\/?)>/
-const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
+const qnameCapture = `((?:${ncname}\\:)?${ncname})`  // 匹配特殊标签 形如 abc:234 前面的abc:可有可无
+const startTagOpen = new RegExp(`^<${qnameCapture}`) // 匹配标签开始 形如 <abc-123 捕获里面的标签名
+const startTagClose = /^\s*(\/?)>/        // 匹配标签结束 
+const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)  // 匹配标签结尾 如 </abc-123> 捕获里面的标签名
 const doctype = /^<!DOCTYPE [^>]+>/i
 // #7298: escape - to avoid being passed as HTML comment when inlined in page
 const comment = /^<!\--/
@@ -52,7 +52,7 @@ function decodeAttr (value, shouldDecodeNewlines) {
 }
 
 export function parseHTML (html, options) {
-  const stack = []
+  const stack = [] // 栈结构 来表示开始和结束标签
   const expectHTML = options.expectHTML
   const isUnaryTag = options.isUnaryTag || no
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
@@ -209,6 +209,7 @@ export function parseHTML (html, options) {
     }
   }
 
+  // 对开始标签进行处理
   function handleStartTag (match) {
     const tagName = match.tagName
     const unarySlash = match.unarySlash
