@@ -50,6 +50,7 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    // console.log()
     def(value, '__ob__', this)
     //当前对象是数组
     // 对数组进行额外判断 重写其方法
@@ -156,6 +157,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     return
   }
   let ob: Observer | void
+  // debugger;
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     // 如果 value 对象上存在 __ob__ 属性，则表示已经做过观察了，直接返回 __ob__ 属性
     ob = value.__ob__

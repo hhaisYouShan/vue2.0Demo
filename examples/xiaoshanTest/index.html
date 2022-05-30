@@ -12,13 +12,14 @@
 <body>
   <div id="root">
     <div>123</div>
-    <div>{{name}}</div>
+    <div>{{name}}{{name}}{{name}}{{name}}{{name}}{{name}}</div>
     <ul>
-      <template v-if="isArrList">
+      <!-- <template v-if="isArrList">
         <li v-for="(item,index) in arrList" :key="index">{{item}}</li>
-      </template>
+      </template> -->
     </ul>
     <button @click="changeArrList">改变</button>
+    <button @click="changeName">改变Name</button>
 
 
     <!-- <chilen textmsg="message"></chilen> -->
@@ -27,7 +28,7 @@
   let app = new Vue({
       el: "#root",
       data: {
-        name: "名字",
+        name1: "名字213",
         arrList: ["张三", "李四", "吴昂呜"],
         message: 'message'
       },
@@ -38,13 +39,22 @@
           this.arrList = [];
           console.log("isArrList",this.isArrList)
         },
+        changeName(){
+          setInterval(()=>{
+            this.name1="李四1"
+          },2000)
+        }
       },
       computed: {
-        isArrList () {
-          return this.arrList && this.arrList.length > 0
+        name () {
+          return this.name1
         }
       }
     });
+    // console.log("app",app)
+    // setInterval(()=>{
+    //   app.name="李四"
+    // },3000)
 
 
     // let Vue = new Vue();

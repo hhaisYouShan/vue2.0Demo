@@ -110,11 +110,11 @@ Vue.prototype.$mount = function (
  */
 function getOuterHTML(el: Element): string {
   if (el.outerHTML) {
-    console.log("el.outerHTML", el.outerHTML)
+    // console.log("el.outerHTML", el.outerHTML)
     return el.outerHTML
   } else {
     const container = document.createElement('div')
-    console.log("el.outerHTML", container)
+    // console.log("el.outerHTML", container)
     container.appendChild(el.cloneNode(true))
     return container.innerHTML
 

@@ -113,7 +113,7 @@ export default class Watcher {
    */
   get () {
      // 打开 Dep.target，Dep.target = this
-    pushTarget(this)
+    pushTarget(this) // 在dep.js 中有一个空数组targetStack  往里添加watcher
     // value 为回调函数执行的结果
     let value
     const vm = this.vm
@@ -136,6 +136,8 @@ export default class Watcher {
       popTarget()
       this.cleanupDeps()
     }
+    console.log("watcher this",this)
+    console.log("watcher value",value)
     return value
   }
 
@@ -199,7 +201,7 @@ export default class Watcher {
       // 懒执行时走这里，比如 computed
       // 将 dirty 置为 true，可以让 computedGetter 执行时重新计算 computed 回调函数的执行结果
       this.dirty = true
-    } else if (this.sync) {
+    } else if (this.sync) {//同步执行
       // 同步执行，在使用 vm.$watch 或者 watch 选项时可以传一个 sync 选项，
       // 当为 true 时在数据更新时该 watcher 就不走异步更新队列，直接执行 this.run 
       // 方法进行更新
@@ -222,6 +224,7 @@ export default class Watcher {
    *   3、执行实例化 watcher 时传递的第三个参数，比如用户 watcher 的回调函数
    */
   run () {
+    // debugger;
     if (this.active) {
        // 调用 this.get 方法
       const value = this.get()
@@ -270,7 +273,7 @@ export default class Watcher {
    *   比如：computed，在获取 vm.computedProperty 的值时会调用该方法
    * 然后执行 this.get，即 watcher 的回调函数，得到返回值
    * this.dirty 被置为 false，作用是页面在本次渲染中只会一次 computed.key 的回调函数，
-   *   这也是大家常说的 computed 和 methods 区别之一是 computed 有缓存的原理所在
+   * 这也是大家常说的 computed 和 methods 区别之一是 computed 有缓存的原理所在
    * 而页面更新后会 this.dirty 会被重新置为 true，这一步是在 this.update 方法中完成的
    */
   depend () {

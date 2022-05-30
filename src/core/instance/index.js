@@ -15,6 +15,7 @@ function Vue (options) {
   }
  // 构造函数仅执行了_init (初始化)
  // options 一般带有 watcher data el 等对象
+ // 调用 Vue.prototype._init 方法，该方法是在 initMixin 中定义的
   this._init(options)
 }
 
@@ -24,6 +25,12 @@ eventsMixin(Vue)  // 事件相关api $on,$once,$off,$emit               挂载 �
 // 混入_update
 lifecycleMixin(Vue) // 生命周期api _update,$forceUpdate,$destroy    挂载 生命周期方法
 // 混入_render
+// 执行installRenderHelpers,在Vue.prototype 对象上安装运行时便利程序
+/**
+ * 定义
+ *  Vue.prototype.$nextTick
+ *  Vue.prototype._render
+ */
 renderMixin(Vue) // 渲染api _render,$nextTick                      挂载与渲染有关的方法
 
 export default Vue

@@ -12,14 +12,14 @@ import {
 } from '../vdom/helpers/index'
 
 export function initEvents(vm: Component) {
-  console.log("执行了initEvents")
+  // console.log("执行了initEvents")
   // 储放各种事件
   vm._events = Object.create(null) 
   vm._hasHookEvent = false
   // init parent attached events
 
   const listeners = vm.$options._parentListeners // 前提 
-  console.log("，listeners",listeners) 
+  // console.log("，listeners",listeners) 
   if (listeners) {
     updateComponentListeners(vm, listeners)
   }

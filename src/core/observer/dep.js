@@ -54,8 +54,10 @@ export default class Dep {
       // order
       subs.sort((a, b) => a.id - b.id)
     }
+   console.log("subs[i]")
     // 遍历 dep 中存储的 watcher，执行 watcher.update()
     for (let i = 0, l = subs.length; i < l; i++) {
+
       subs[i].update()
     }
   }
@@ -69,12 +71,20 @@ export default class Dep {
  * 当前正在执行的 watcher，同一时间只会有一个 watcher 在执行
  * Dep.target = 当前正在执行的 watcher
  * 通过调用 pushTarget 方法完成赋值，调用 popTarget 方法完成重置（null)
+ * 
+ * 个人问题：为什么要用这个 主要目的是什么？ time:20220514 
+ * 原因解答： Dep只针对响应式数据 在有多个相同的
  */
 Dep.target = null
 const targetStack = []
+let newNum=0
 
 // 在需要进行依赖收集的时候调用，设置 Dep.target = watcher
 export function pushTarget (target: ?Watcher) {
+  newNum++
+  // console.log(`newNum${newNum}:${target}`)
+  console.log("newNum target",target,newNum)
+  console.log("targetStack",targetStack)
   targetStack.push(target)
   Dep.target = target
 }

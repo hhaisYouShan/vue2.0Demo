@@ -140,7 +140,7 @@ function initData(vm: Component) {
   // 如果data 是函数，则执行之并将结果作为data选项的值  
   // data  实例_data的属性给data
   data = vm._data = typeof data === "function" ? getData(data, vm) : data || {};
-  console.log("data", data)
+  // console.log("data", data)
 
   if (!isPlainObject(data)) {
     data = {};
@@ -350,8 +350,8 @@ function createGetterInvoker(fn) {
  *   3、将 methods[key] 放到 vm 实例上，得到 vm[key] = methods[key]
  */
 function initMethods(vm: Component, methods: Object) {
-    console.log("initvm",vm)
-    console.log("initMethodsmethods",methods)
+    // console.log("initvm",vm)
+    // console.log("initMethodsmethods",methods)
   const props = vm.$options.props;
   for (const key in methods) {
     if (process.env.NODE_ENV !== "production") {
@@ -445,10 +445,12 @@ export function stateMixin(Vue: Class<Component> ) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
+  // data
   const dataDef = {};
   dataDef.get = function () {
     return this._data;
   };
+  // props
   const propsDef = {};
   propsDef.get = function () {
     return this._props;
@@ -465,6 +467,7 @@ export function stateMixin(Vue: Class<Component> ) {
       warn(`$props is readonly.`, this);
     };
   }
+  
   Object.defineProperty(Vue.prototype, "$data", dataDef);
   Object.defineProperty(Vue.prototype, "$props", propsDef);
 

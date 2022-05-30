@@ -32,7 +32,7 @@ export function setActiveInstance(vm: Component) {
 export function initLifecycle(vm: Component) {
   
   const options = vm.$options
-  console.log("optionsoptionsoptions",options)
+  // console.log("optionsoptionsoptions",options)
 
   // locate first non-abstract parent
   let parent = options.parent
@@ -143,6 +143,10 @@ export function lifecycleMixin(Vue: Class<Component> ) {
 }
 
 // 组件挂载核心方法 
+
+// 1.调用render 方法产生虚拟DOM
+// 2.根据虚拟DOM 产生真实DOM
+// 3.插入el元素中
 export function mountComponent(
   vm: Component,
   el: ? Element,
