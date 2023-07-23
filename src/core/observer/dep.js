@@ -83,8 +83,6 @@ let newNum=0
 export function pushTarget (target: ?Watcher) {
   newNum++
   // console.log(`newNum${newNum}:${target}`)
-  console.log("newNum target",target,newNum)
-  console.log("targetStack",targetStack)
   targetStack.push(target)
   Dep.target = target
 }

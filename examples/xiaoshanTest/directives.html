@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,17 +10,9 @@
 
 <body>
   <div id="root">
-    <div>123</div>
-    <div>{{name}}</div>
-    <ul>
-      <template v-if="isArrList">
-        <li v-for="(item,index) in arrList" :key="index">{{item}}</li>
-      </template>
-    </ul>
-    <div v-for="(item,index) in objList" :key="index">{{item.name}}-{{item.age}}</div>
-    <button @click="changeArrList">改变</button>
-    <button @click="changeName">改变Name</button>
-
+    <div class="hi">
+      <div v-if="ok" v-test:arg.hello="a">{{ msg }}</div>
+    </div>
 
     <!-- <chilen textmsg="message"></chilen> -->
   </div>
@@ -29,43 +20,51 @@
   let app = new Vue({
       el: "#root",
       data: {
-        name1: "名字213",
-        arrList: ["张三", "李四", "吴昂呜"],
-        objList:[{
-          name:'张三',
-          age:17
-        },{
-          name:'张三1',
-          age:18
-        },{
-          name:'张三2',
-          age:19
-        }],
-        message: 'message'
+        msg: 'hi',
+        a: 'foo',
+        ok: true
       },
+      directives: {
+        test: {
+          bind (el, binding, vnode) {
 
-      methods: {
-        changeArrList () {
-
-          // this.arrList = [];
-        // console.log("this.$set(this.objList,2,{name:'张三122',age:18})",this.$set(this.objList,2,{name:'张三122',age:18}))
-          this.set(this.objList,2,{name:'张三122',age:18})
-          // this.objList[1]={ name:'张三122',age:18}
-          // console.log(this)
-          // this.set()
-
-        },
-        changeName(){
-          setInterval(()=>{
-            this.name1="李四1"
-          },2000)
+            console.log("unbind el, ",el)
+           console.log("unbind binding, ", binding)
+           console.log("unbind vnode", vnode)
+          },
+          inserted (el, binding, vnode) {
+            // insertedSpy()
+            console.log("unbind el, ",el)
+           console.log("unbind binding, ", binding)
+           console.log("unbind vnode", vnode)
+          //  console.log("oldVnode",oldVnode)
+          },
+          update (el, binding, vnode, oldVnode) {
+           console.log("unbind el, ",el)
+           console.log("unbind binding, ", binding)
+           console.log("unbind vnode", vnode)
+           console.log("unbind oldVnode",oldVnode)
+           
+          },
+          componentUpdated (el, binding, vnode) {
+            console.log("unbind el, ",el)
+           console.log("unbind binding, ", binding)
+           console.log("unbind vnode", vnode)
+          },
+          unbind (el, binding, vnode) {
+            console.log("unbind el, ",el)
+           console.log(" unbind binding, ", binding)
+           console.log("unbind vnode", vnode)
+          }
         }
       },
-      computed: {
-        name () {
-          return this.name1
-        }
-      }
+
+      // methods: {
+        
+      // },
+      // computed: {}
+      
+      
     });
     // console.log("app",app)
     // setInterval(()=>{

@@ -46,7 +46,7 @@ methodsToPatch.forEach(function (method) {
     // 保留原型方法的执行结果
     const result = original.apply(this, args)
     //额外任务 通知更新
-     // this代表的就是数据本身 比如数据是{a:[1,2,3]} 那么我们使用a.push(4) 
+    // this代表的就是数据本身 比如数据是{a:[1,2,3]} 那么我们使用a.push(4) 
     // this就是a  ob就是a.__ob__ 这个属性就是上段代码增加的 代表的是该数据已经被响应式观察过了指向Observer实例
     const ob = this.__ob__
     // 这里的标志就是代表数组有新增操作

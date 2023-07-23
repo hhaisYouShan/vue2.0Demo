@@ -26,12 +26,14 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   if (options.optimize !== false) {
     optimize(ast, options)
   }
+  console.log("ast",ast)
 
   // 3.通过ast 重新生成代码
   // 我们最后生成的代码需要和render函数一样
   // 类似_c('div',{id:"app"},_c('div',undefined,_v("hello"+_s(name)),_c('span',undefined,_v("world"))))
   // _c代表创建元素 _v代表创建文本 _s代表文Json.stringify--把对象解析成文本
   const code = generate(ast, options)
+  console.log("code",code)
   return {
     ast,
     render: code.render,

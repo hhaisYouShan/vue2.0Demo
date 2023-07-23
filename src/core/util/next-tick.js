@@ -133,7 +133,6 @@ export function nextTick(cb ?: Function, ctx ?: Object) {
     if (cb) {
       // 用 try catch 包装回调函数，便于错误捕获
       try {
-       
         cb.call(ctx)
       } catch (e) {
         handleError(e, ctx, 'nextTick')
