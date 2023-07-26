@@ -6,16 +6,26 @@ import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
 // vue 的构造函数
-function Vue (options) {
-    // 提示
+function Vue(options) {
+  // 提示
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)
   ) {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
- // 构造函数仅执行了_init (初始化)
- // options 一般带有 watcher data el 等对象
- // 调用 Vue.prototype._init 方法，该方法是在 initMixin 中定义的
+
+  // 1.初始化组件实例关系属性
+  // 2.自定义事件的监听
+  // 3.插槽和渲染函数
+  // 4.触发 beforeCreate 钩子函数
+  // 5.初始化 inject 配置项
+  // 6.初始化响应式数据，如 props, methods, data, computed, watch
+  // 7.初始化解析 provide
+  // 8.触发 created 钩子函数
+
+  // 构造函数仅执行了_init (初始化)
+  // options 一般带有 watcher data el 等对象
+  // 调用 Vue.prototype._init 方法，该方法是在 initMixin 中定义的
   this._init(options)
 }
 
